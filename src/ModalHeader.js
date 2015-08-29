@@ -1,17 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
+import createChainedFunction from './utils/createChainedFunction';
 
 class ModalHeader extends React.Component {
+
   render() {
+    let onHide = createChainedFunction(this.context.$bs_onModalHide, this.props.onHide);
+
     return (
       <div
         {...this.props}
-        className={classNames(this.props.className, this.props.modalClassName)}>
+        className={classNames(this.props.className, this.props.modalClassName)}
+      >
         { this.props.closeButton &&
           <button
             type="button"
             className="close"
-            onClick={this.props.onHide}>
+            onClick={onHide}>
             <span aria-hidden="true">
               &times;
             </span>
@@ -22,9 +27,6 @@ class ModalHeader extends React.Component {
     );
   }
 }
-
-// used in liue of parent contexts right now to auto wire the close button
-ModalHeader.__isModalHeader = true;
 
 ModalHeader.propTypes = {
   /**
@@ -48,6 +50,10 @@ ModalHeader.propTypes = {
    * be propagated up to the parent Modal `onHide`.
    */
   onHide: React.PropTypes.func
+};
+
+ModalHeader.contextTypes = {
+  '$bs_onModalHide': React.PropTypes.func
 };
 
 ModalHeader.defaultProps = {
